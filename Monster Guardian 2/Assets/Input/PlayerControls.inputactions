@@ -9,7 +9,25 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "23cbbc96-4231-4af0-bfde-f6529d58c5a0",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Stick",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Camera Rotate",
+                    "type": "Value",
+                    "id": "079f320d-f970-4795-b2ab-c7a2a11b5e44",
+                    "expectedControlType": "Stick",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
+                    "type": "Value",
+                    "id": "16b69201-9b5b-4adc-9a66-018578103d76",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -24,6 +42,28 @@
                     "processors": "",
                     "groups": "Controller",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f11a974b-024f-46ff-af76-6f2cb9e08b9f",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Camera Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17ccf36e-a02a-434d-818b-5eff87a99515",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
