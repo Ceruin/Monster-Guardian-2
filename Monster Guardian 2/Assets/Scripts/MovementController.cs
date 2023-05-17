@@ -6,42 +6,44 @@ using UnityEngine.InputSystem;
 
 public class MovementController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private float rotationSpeed = 200f;
+    public float moveSpeed = 5f;
+    public float rotationSpeed = 720.0f; // New variable to control the rotation speed
+    private CharacterController controller;
 
-    private Rigidbody _rigidbody;
     private Vector2 _moveInput;
-    private Vector2 _rotationInput;
     private CinemachineFreeLook _camera;
-    private bool _jumpRequested;
+
+    private PlayerControls actions;
+    private float verticalVelocity = 0.0f;
 
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
+        actions = new PlayerControls();
 
-        PlayerControls actions = new PlayerControls();
+        actions.Player.Movement.performed += OnMove_performed;
+        actions.Player.Movement.canceled += OnMove_canceled;
+    }
 
-        actions.Movement.Move.performed += OnMove_performed;
-        actions.Movement.Move.canceled += OnMove_canceled;
+    private void OnEnable()
+    {
+        // Enable the input actions when the object is enabled
+        actions.Player.Enable();
+    }
 
-        actions.Movement.CameraRotate.performed += OnRotate_performed;
-        actions.Movement.CameraRotate.canceled += OnRotate_canceled;
-
-        actions.Movement.Jump.performed += OnJump;
-
-        actions.Enable();
+    private void OnDisable()
+    {
+        // Disable the input actions when the object is disabled
+        actions.Player.Disable();
     }
 
     private void Update()
     {
-        HandleJump();
+        HandleMovement();
     }
 
     private void FixedUpdate()
     {
-        HandleMovement();
-        HandleRotation();
     }
 
     public void OnMove_performed(InputAction.CallbackContext context)
@@ -54,56 +56,49 @@ public class MovementController : MonoBehaviour
         _moveInput = Vector2.zero;
     }
 
-    public void OnRotate_performed(InputAction.CallbackContext context)
-    {
-        _rotationInput = context.ReadValue<Vector2>();
-    }
-
-    public void OnRotate_canceled(InputAction.CallbackContext context)
-    {
-        _rotationInput = Vector2.zero;
-    }
-
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            _jumpRequested = true;
-        }
-    }
-
     private void HandleMovement()
     {
-        // Use the camera's forward and right vectors as the basis for movement
-        Vector3 forward = Camera.main.transform.forward;
-        Vector3 right = Camera.main.transform.right;
+        // Convert the movement input into the camera's coordinate space
+        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
 
-        // Ignore the y component of the forward and right vectors to avoid vertical movement
-        forward.y = 0;
-        right.y = 0;
+        // Ignore the y component of the camera's forward vector
+        cameraForward.y = 0;
 
-        forward.Normalize();
-        right.Normalize();
+        // Normalize the vectors (important if the camera isn't level)
+        cameraForward.Normalize();
+        cameraRight.Normalize();
 
-        // Calculate the desired move direction based on input and the camera's orientation
-        Vector3 moveDirection = forward * _moveInput.y + right * _moveInput.x;
-        moveDirection.Normalize();
+        Vector3 movement = (cameraForward * _moveInput.y + cameraRight * _moveInput.x) * moveSpeed * Time.deltaTime;
 
-        _rigidbody.velocity = new Vector3(moveDirection.x * moveSpeed, _rigidbody.velocity.y, moveDirection.z * moveSpeed);
-    }
-
-    private void HandleRotation()
-    {
-        float rotationY = _rotationInput.x * rotationSpeed * Time.fixedDeltaTime;
-        transform.Rotate(0, rotationY, 0, Space.World);
-    }
-
-    private void HandleJump()
-    {
-        if (_jumpRequested)
+        // Apply gravity
+        if (controller.isGrounded)
         {
-            _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            _jumpRequested = false;
+            verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
         }
+        else
+        {
+            verticalVelocity += Physics.gravity.y * Time.deltaTime;  // Apply gravity
+        }
+
+        // Combine the horizontal and vertical movement
+        Vector3 finalMovement = movement + new Vector3(0, verticalVelocity, 0) * Time.deltaTime;
+
+        // If there's some horizontal movement, rotate the character to face the move direction
+        if (movement != Vector3.zero)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+        }
+        controller.Move(finalMovement);
     }
+
+    //private void HandleRotation(Vector3 moveDir)
+    //{
+    //    if (moveDir != Vector3.zero) // only change rotation when moving
+    //    {
+    //        Quaternion toRotation = Quaternion.LookRotation(moveDir, Vector3.up);
+    //        transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.fixedDeltaTime);
+    //    }
+    //}
 }
