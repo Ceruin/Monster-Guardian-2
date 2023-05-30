@@ -48,6 +48,6 @@ public class CameraController : MonoBehaviour
 
         // Pass the input to the Cinemachine camera
         _virtualCamera.m_XAxis.Value += _cameraInput.x;
-        _virtualCamera.m_YAxis.Value -= _cameraInput.y;
+        _virtualCamera.m_YAxis.Value += _cameraInput.y;  // remove the minus sign to invert the vertical rotation
     }
 }
