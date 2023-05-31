@@ -62,6 +62,24 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cursor"",
+                    ""type"": ""Value"",
+                    ""id"": ""b574e50a-c430-402e-acb2-89e0e63cf845"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Throw"",
+                    ""type"": ""Button"",
+                    ""id"": ""53aa3433-2e8f-4e8f-b9d3-ed09b1358d6e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +170,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b669f104-2b20-43e0-98ca-e0830a90b15c"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc2eb420-f290-4b82-8289-0eb41b3570b1"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -164,6 +204,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_CameraRotate = m_Player.FindAction("Camera Rotate", throwIfNotFound: true);
         m_Player_RightClick = m_Player.FindAction("Right Click", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Cursor = m_Player.FindAction("Cursor", throwIfNotFound: true);
+        m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -227,6 +269,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraRotate;
     private readonly InputAction m_Player_RightClick;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Cursor;
+    private readonly InputAction m_Player_Throw;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -235,6 +279,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @CameraRotate => m_Wrapper.m_Player_CameraRotate;
         public InputAction @RightClick => m_Wrapper.m_Player_RightClick;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Cursor => m_Wrapper.m_Player_Cursor;
+        public InputAction @Throw => m_Wrapper.m_Player_Throw;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -256,6 +302,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Cursor.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCursor;
+                @Cursor.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCursor;
+                @Cursor.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCursor;
+                @Throw.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrow;
+                @Throw.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrow;
+                @Throw.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrow;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -272,6 +324,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Cursor.started += instance.OnCursor;
+                @Cursor.performed += instance.OnCursor;
+                @Cursor.canceled += instance.OnCursor;
+                @Throw.started += instance.OnThrow;
+                @Throw.performed += instance.OnThrow;
+                @Throw.canceled += instance.OnThrow;
             }
         }
     }
@@ -282,5 +340,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnCameraRotate(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnCursor(InputAction.CallbackContext context);
+        void OnThrow(InputAction.CallbackContext context);
     }
 }
