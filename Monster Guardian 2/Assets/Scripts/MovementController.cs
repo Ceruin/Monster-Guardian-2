@@ -9,7 +9,8 @@ public class MovementController : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 720.0f; // New variable to control the rotation speed
     private CharacterController controller;
-
+    private bool jumpRequest = false; // Variable to track if a jump has been requested
+    public float jumpForce = 5f;  // New variable to control the jumping power
     private Vector2 _moveInput;
     private CinemachineFreeLook _camera;
 
@@ -23,6 +24,8 @@ public class MovementController : MonoBehaviour
 
         actions.Player.Movement.performed += OnMove_performed;
         actions.Player.Movement.canceled += OnMove_canceled;
+
+        actions.Player.Jump.performed += OnJump_performed;
     }
 
     private void OnEnable()
@@ -56,6 +59,12 @@ public class MovementController : MonoBehaviour
         _moveInput = Vector2.zero;
     }
 
+    public void OnJump_performed(InputAction.CallbackContext context)
+    {
+        // Set a flag to indicate that a jump has been requested
+        jumpRequest = true;
+    }
+
     private void HandleMovement()
     {
         // Convert the movement input into the camera's coordinate space
@@ -75,6 +84,13 @@ public class MovementController : MonoBehaviour
         if (controller.isGrounded)
         {
             verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
+
+            // If a jump has been requested, apply an upward force
+            if (jumpRequest)
+            {
+                verticalVelocity = jumpForce;
+                jumpRequest = false;  // Reset the jump request
+            }
         }
         else
         {

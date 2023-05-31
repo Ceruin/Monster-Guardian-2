@@ -2143,6 +2143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 720
+  jumpForce: 2.5
 --- !u!1 &1729537770
 GameObject:
   m_ObjectHideFlags: 0
