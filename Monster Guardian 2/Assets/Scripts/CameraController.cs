@@ -1,20 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Cinemachine;
 
 public class CameraController : MonoBehaviour
 {
     private Vector2 _cameraInput;
-    private CinemachineFreeLook _virtualCamera;
+    private float yaw = 0.0f;
+    private float pitch = 0.0f;
+    public Transform target;
+    public Vector2 sensitivity = new Vector2(0.01f, 0.01f);
+    public float distance = 10.0f;
+    private PlayerControls actions;
+    private Vector3 originalOffset;
 
     private void Awake()
     {
-        PlayerControls actions = new PlayerControls();
-        _virtualCamera = GetComponent<CinemachineFreeLook>();
-        _virtualCamera.m_XAxis.m_MaxSpeed = 0; // Disable horizontal movement initially
-        _virtualCamera.m_YAxis.m_MaxSpeed = 0; // Disable vertical movement initially
+        actions = new PlayerControls();
+
         actions.Player.RightClick.performed += RightClick_performed;
         actions.Player.RightClick.canceled += RightClick_canceled;
         actions.Player.CameraRotate.performed += CameraRotate_performed;
@@ -23,18 +24,51 @@ public class CameraController : MonoBehaviour
         actions.Enable();
 
         Cursor.lockState = CursorLockMode.None;
+
+        originalOffset = transform.position - target.position;
+        distance = originalOffset.magnitude;
+        yaw = Mathf.Atan2(originalOffset.x, originalOffset.z);
+        pitch = Mathf.Asin(originalOffset.y / distance);
+    }
+
+    private void Update()
+    {
+        if (actions.Player.RightClick.ReadValue<float>() > 0.5f)
+        {
+            yaw += _cameraInput.x * sensitivity.x;
+            float targetPitch = pitch - _cameraInput.y * sensitivity.y;
+            // Clamp the pitch to prevent the camera from flipping over the top of the player
+            if (targetPitch * Mathf.Rad2Deg > -85 && targetPitch * Mathf.Rad2Deg < 85)
+            {
+                pitch = targetPitch;
+            }
+
+            Vector3 direction = new Vector3(Mathf.Sin(pitch) * Mathf.Sin(yaw),
+                                            Mathf.Cos(pitch),
+                                            Mathf.Sin(pitch) * Mathf.Cos(yaw));
+
+            transform.position = target.position + direction * distance;
+            transform.LookAt(target);
+        }
+        else
+        {
+            originalOffset = new Vector3(Mathf.Sin(pitch) * Mathf.Sin(yaw),
+                                        Mathf.Cos(pitch),
+                                        Mathf.Sin(pitch) * Mathf.Cos(yaw)) * distance;
+
+            transform.position = target.position + originalOffset;
+            transform.LookAt(target);
+        }
     }
 
     private void RightClick_canceled(InputAction.CallbackContext obj)
     {
-        _virtualCamera.m_XAxis.m_MaxSpeed = 0; // Disable horizontal movement when the button is released
-        _virtualCamera.m_YAxis.m_MaxSpeed = 0; // Disable vertical movement when the button is released
+        _cameraInput = Vector2.zero;
+        originalOffset = transform.position - target.position;
     }
 
     private void RightClick_performed(InputAction.CallbackContext obj)
     {
-        _virtualCamera.m_XAxis.m_MaxSpeed = 300; // Enable horizontal movement when the button is pressed
-        _virtualCamera.m_YAxis.m_MaxSpeed = 2; // Enable vertical movement when the button is pressed
     }
 
     private void CameraRotate_canceled(InputAction.CallbackContext context)
@@ -45,9 +79,5 @@ public class CameraController : MonoBehaviour
     private void CameraRotate_performed(InputAction.CallbackContext context)
     {
         _cameraInput = context.ReadValue<Vector2>();
-
-        // Pass the input to the Cinemachine camera
-        _virtualCamera.m_XAxis.Value += _cameraInput.x;
-        _virtualCamera.m_YAxis.Value += _cameraInput.y;  // remove the minus sign to invert the vertical rotation
     }
 }
