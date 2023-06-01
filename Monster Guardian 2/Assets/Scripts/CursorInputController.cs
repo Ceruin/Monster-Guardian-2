@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CursorInputController : MonoBehaviour
@@ -35,7 +36,7 @@ public class CursorInputController : MonoBehaviour
         mousePos = actions.Player.Cursor.ReadValue<Vector2>();
 
         // check if the left mouse button was clicked
-        if (actions.Player.Throw.ReadValue<float>() > 0)
+        if (actions.Player.Throw.triggered)
         {
             // calculate the throw direction and strength based on the cursor position and player position
             Vector3 throwDirection = (gameCursor.transform.position - player.transform.position).normalized;
@@ -48,25 +49,48 @@ public class CursorInputController : MonoBehaviour
             Destroy(throwParticle, throwParticle.GetComponent<ParticleSystem>().main.duration);
 
             // Call the throw function
-            ThrowObject(gameCursor.transform.position);
+            ThrowObject(gameCursor.transform.position, throwStrength);
         }
     }
 
-    void ThrowObject(Vector3 targetPosition)
+    public float throwArcHeight = 2f; // The height of the throw arc above the player
+
+    void ThrowObject(Vector3 targetPosition, float speed)
     {
-        // create a new instance of the object at the player's position
+        // Create a new instance of the object at the player's position
         GameObject thrownObject = Instantiate(throwObjectPrefab, player.transform.position, Quaternion.identity);
 
-        // calculate the initial velocity required to reach the target position
+        // Calculate the direction to the target position
         Vector3 throwDirection = (targetPosition - player.transform.position).normalized;
-        Vector3 throwVelocity = throwDirection * throwSpeed;
 
-        // add this velocity to the object
+        // Adjust the throw direction for the arc height
+        throwDirection += Vector3.up * throwArcHeight;
+
+        // Normalise the throw direction and multiply by the speed to get the velocity
+        Vector3 throwVelocity = throwDirection.normalized * speed;
+
+        // Add this velocity to the object
         Rigidbody rb = thrownObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.velocity = throwVelocity;
         }
+
+        // Disable the collider on the thrown object for a short time
+        Collider objectCollider = thrownObject.GetComponent<Collider>();
+        if (objectCollider != null)
+        {
+            objectCollider.enabled = false;
+            StartCoroutine(EnableColliderAfterDelay(objectCollider, 0.5f));
+        }
+    }
+
+
+
+    IEnumerator EnableColliderAfterDelay(Collider collider, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        collider.enabled = true;
     }
 
     // FixedUpdate is called at a fixed interval and is independent of frame rate
