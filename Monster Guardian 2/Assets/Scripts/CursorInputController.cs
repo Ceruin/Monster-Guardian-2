@@ -5,7 +5,6 @@ public class CursorInputController : MonoBehaviour
 {
     public GameObject player; // the player character
     public GameObject gameCursor; // the game cursor
-    public GameObject throwParticlePrefab; // the particle system prefab
     public GameObject throwObjectPrefab; // the object to throw
     public LayerMask groundLayer; // ground layer mask
     public float throwStrengthMultiplier = 1f; // the throw strength multiplier
@@ -41,12 +40,6 @@ public class CursorInputController : MonoBehaviour
             // calculate the throw direction and strength based on the cursor position and player position
             Vector3 throwDirection = (gameCursor.transform.position - player.transform.position).normalized;
             float throwStrength = Vector3.Distance(gameCursor.transform.position, player.transform.position) * throwStrengthMultiplier;
-
-            // spawn the particle system at the throw location
-            GameObject throwParticle = Instantiate(throwParticlePrefab, gameCursor.transform.position, Quaternion.identity);
-
-            // destroy the particle system after its duration
-            Destroy(throwParticle, throwParticle.GetComponent<ParticleSystem>().main.duration);
 
             // Call the throw function
             ThrowObject(gameCursor.transform.position, throwStrength);
