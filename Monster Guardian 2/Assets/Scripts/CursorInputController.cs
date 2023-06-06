@@ -10,12 +10,16 @@ public class CursorInputController : MonoBehaviour
     public float throwStrengthMultiplier = 1f; // the throw strength multiplier
     public float throwSpeed = 10f; // the speed of the throw
     private PlayerControls actions;
-
+    public Texture2D texture;
     private Vector2 mousePos;
 
     private void Awake()
     {
         actions = new PlayerControls();
+
+        Vector2 hotSpot = Vector2.zero; // replace zero with your hot spot
+        // Set your custom cursor for the game window
+        Cursor.SetCursor(texture, hotSpot, CursorMode.Auto);
     }
 
     private void OnEnable()
