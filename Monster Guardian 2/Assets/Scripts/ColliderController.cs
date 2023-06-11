@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class ColliderController : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
     private BoxCollider collider;
 
     private void Start()
     {
         collider = GetComponent<BoxCollider>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void Update()
@@ -16,6 +17,7 @@ public class ColliderController : MonoBehaviour
         collider.size = spriteRenderer.bounds.size;
 
         // Update the position of the collider to match the sprite bounds
-        collider.center = spriteRenderer.bounds.center;
+        // Convert from world space to local space
+        collider.center = transform.InverseTransformPoint(spriteRenderer.bounds.center);
     }
 }
