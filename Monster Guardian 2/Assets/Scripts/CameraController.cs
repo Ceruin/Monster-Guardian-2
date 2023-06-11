@@ -26,6 +26,7 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
 
         originalOffset = transform.position - target.position;
+        
         distance = originalOffset.magnitude;
         yaw = Mathf.Atan2(originalOffset.x, originalOffset.z);
         pitch = Mathf.Asin(originalOffset.y / distance);

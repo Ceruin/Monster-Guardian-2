@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class SpinItem : MonoBehaviour
 {
-    public float spinSpeed = 50.0f; // Speed of the spin
+    public float rotationSpeed = 50f; // Adjust to your preference
 
-    void Update()
+    private void Update()
     {
-        // Rotate around Z axis
-        transform.Rotate(0, 0, spinSpeed * Time.deltaTime);
+        transform.Rotate(0, rotationSpeed * Time.deltaTime, 0, Space.Self);
     }
 }
