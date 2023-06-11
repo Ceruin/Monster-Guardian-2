@@ -5545,6 +5545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1813053665}
   - component: {fileID: 1813053666}
+  - component: {fileID: 1813053667}
   m_Layer: 0
   m_Name: Capsule-Onion
   m_TagString: Untagged
@@ -5581,6 +5582,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.8548698, y: 3.760203, z: 1}
   m_Center: {x: 0.03639412, y: -0.07888633, z: 0}
+--- !u!114 &1813053667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813053664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48fa2d9d99d8c7848aa8c5081a625b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 1365037633}
 --- !u!1 &1892345890
 GameObject:
   m_ObjectHideFlags: 0
