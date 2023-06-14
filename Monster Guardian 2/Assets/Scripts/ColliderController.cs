@@ -1,23 +1,24 @@
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class ColliderController : MonoBehaviour
 {
-    private SpriteRenderer spriteRenderer;
-    private BoxCollider collider;
+    private BoxCollider _collider;
+    private SpriteRenderer _spriteRenderer;
 
-    private void Start()
+    private void Awake()
     {
-        collider = GetComponent<BoxCollider>();
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-    }
+        _collider = GetComponent<BoxCollider>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
 
-    private void Update()
-    {
-        // Update the size of the collider to match the sprite bounds
-        collider.size = spriteRenderer.bounds.size;
+        // Create a cube collider around the sprite
+        Vector2 spriteSize = _spriteRenderer.sprite.bounds.size;
+        Vector3 parentScale = _spriteRenderer.transform.lossyScale;
 
-        // Update the position of the collider to match the sprite bounds
-        // Convert from world space to local space
-        collider.center = transform.InverseTransformPoint(spriteRenderer.bounds.center);
+        float maxDimension = Mathf.Max(spriteSize.x * parentScale.x, spriteSize.y * parentScale.y);
+        _collider.size = new Vector3(maxDimension, maxDimension, maxDimension);
+
+        // Center the collider
+        _collider.center = _spriteRenderer.bounds.center - transform.position;
     }
 }

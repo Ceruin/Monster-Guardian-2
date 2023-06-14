@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class FacePlayer : MonoBehaviour
 {
-    public Vector3 playerPosition;
+    public Transform playerTransform;
 
-    void Update()
+    private void Update()
     {
-        Vector3 directionToPlayer = (playerPosition - transform.position).normalized;
-        float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        Vector3 targetPosition = new Vector3(playerTransform.position.x,
+                                             transform.position.y,
+                                             playerTransform.position.z);
+        transform.LookAt(targetPosition);
     }
 }

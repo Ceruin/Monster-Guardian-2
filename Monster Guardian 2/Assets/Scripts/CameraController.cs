@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     public float distance = 10.0f;
     private PlayerControls actions;
     private Vector3 originalOffset;
+    private int verticalPitch = 85;
 
     private void Awake()
     {
@@ -26,7 +27,7 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
 
         originalOffset = transform.position - target.position;
-        
+
         distance = originalOffset.magnitude;
         yaw = Mathf.Atan2(originalOffset.x, originalOffset.z);
         pitch = Mathf.Asin(originalOffset.y / distance);
@@ -39,7 +40,7 @@ public class CameraController : MonoBehaviour
             yaw += _cameraInput.x * sensitivity.x;
             float targetPitch = pitch - _cameraInput.y * sensitivity.y;
             // Clamp the pitch to prevent the camera from flipping over the top of the player
-            if (targetPitch * Mathf.Rad2Deg > -85 && targetPitch * Mathf.Rad2Deg < 85)
+            if (targetPitch * Mathf.Rad2Deg > -verticalPitch && targetPitch * Mathf.Rad2Deg < verticalPitch)
             {
                 pitch = targetPitch;
             }
