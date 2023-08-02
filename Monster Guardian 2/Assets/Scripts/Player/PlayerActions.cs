@@ -8,7 +8,7 @@ public class PlayerActions : MonoBehaviour, IDamageable
     public Transform cubeminThrowPoint;
     public PlayerCursor cursor;
 
-    public void LightPunch(InputAction.CallbackContext context)
+    public void Slap(InputAction.CallbackContext context)
     {
         if (context.started)
         {
@@ -32,7 +32,7 @@ public class PlayerActions : MonoBehaviour, IDamageable
         }
     }
 
-    public void ThrowCubemin(InputAction.CallbackContext context)
+    public void Throw(InputAction.CallbackContext context)
     {
         if (context.started)
         {
@@ -57,5 +57,4 @@ public class PlayerActions : MonoBehaviour, IDamageable
             // You may want to add code here to trigger a damage animation, play a sound, etc.
         }
     }
-
 }

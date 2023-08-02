@@ -1,20 +1,21 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class EnemyMovement : MonoBehaviour
 {
     public float walkSpeed = 2f;
     public float crawlSpeed = 1f;
-    public float jumpHeight = 1f;
+    public float jumpHeight = 5f; // You may need to adjust this value
     public Transform[] waypoints;
     private int currentWaypoint = 0;
-    private CharacterController controller;
+    private Rigidbody rb;
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         MoveToNextWaypoint();
     }
@@ -26,7 +27,7 @@ public class EnemyMovement : MonoBehaviour
 
         Transform targetWaypoint = waypoints[currentWaypoint];
         Vector3 direction = (targetWaypoint.position - transform.position).normalized;
-        controller.Move(direction * walkSpeed * Time.deltaTime);
+        rb.MovePosition(transform.position + direction * walkSpeed * Time.fixedDeltaTime);
 
         if (Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
         {
@@ -36,6 +37,7 @@ public class EnemyMovement : MonoBehaviour
 
     public void Jump()
     {
-        controller.Move(Vector3.up * jumpHeight);
+        // Adding upward force to simulate a jump
+        rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
     }
 }

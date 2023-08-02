@@ -7,14 +7,22 @@ public class EnemyActions : MonoBehaviour, IDamageable
         Idle,
         Wandering,
         Patrolling,
+        Attacking,
+        Eat,
+        Slam
     }
 
     public int health = 50; // You can adjust the initial health value as needed
-
-    private State currentState = State.Idle;
     public Transform[] patrolPoints;
-    private int currentPatrolIndex = 0;
     public float moveSpeed = 2f;
+    private int currentPatrolIndex = 0;
+    private State currentState = State.Idle;
+    private EnemyMovement movement;
+
+    void Start()
+    {
+        movement = GetComponent<EnemyMovement>();
+    }
 
     void Update()
     {
@@ -39,14 +47,20 @@ public class EnemyActions : MonoBehaviour, IDamageable
 
     private void Patrol()
     {
-        Transform targetPatrolPoint = patrolPoints[currentPatrolIndex];
-        transform.position = Vector3.MoveTowards(transform.position, targetPatrolPoint.position, moveSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, targetPatrolPoint.position) < 0.1f)
+        if (movement && patrolPoints.Length > 0)
         {
-            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            Transform targetPatrolPoint = patrolPoints[currentPatrolIndex];
+            Vector3 direction = (targetPatrolPoint.position - transform.position).normalized;
+            movement.GetComponent<Rigidbody>().velocity = direction * moveSpeed;
+
+            if (Vector3.Distance(transform.position, targetPatrolPoint.position) < 0.1f)
+            {
+                movement.GetComponent<Rigidbody>().velocity = Vector3.zero; // Stop the rigidbody from moving
+                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            }
         }
     }
+
 
     public void ShakeOffCubemins()
     {
@@ -77,5 +91,4 @@ public class EnemyActions : MonoBehaviour, IDamageable
             // You may want to add code here to trigger a damage animation, play a sound, etc.
         }
     }
-
 }

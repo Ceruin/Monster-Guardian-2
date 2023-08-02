@@ -17,13 +17,16 @@ public class EnemyType : MonoBehaviour
         {
             case Type.Walking:
                 // Initialize walking enemy
+                GetComponent<EnemyMovement>().walkSpeed = 3f; // Example walking speed
                 break;
             case Type.Jumping:
                 // Initialize jumping enemy
-                GetComponent<EnemyMovement>().jumpHeight = 2f; // Example customization for a jumping enemy
+                GetComponent<EnemyMovement>().jumpHeight = 2f; // Jump height
+                GetComponent<EnemyMovement>().walkSpeed = 2f; // Walking speed with jumping ability
                 break;
             case Type.Flying:
                 // Initialize flying enemy
+                //GetComponent<EnemyMovement>().isFlying = true; // Enable flying behavior
                 break;
         }
     }
