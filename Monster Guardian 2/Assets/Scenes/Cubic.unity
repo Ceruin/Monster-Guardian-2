@@ -219,7 +219,7 @@ MonoBehaviour:
   health: 100
   cubeminPrefab: {fileID: 826425541492344692, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
   cubeminThrowPoint: {fileID: 0}
-  cursor: {fileID: 0}
+  cursor: {fileID: 1129490429}
 --- !u!114 &1129490428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,11 +232,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2b0509a66a9384699eac444e9cbf20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1129490425}
+  target: {fileID: 1805933963}
   distance: 10
   height: 5
   heightDamping: 2
   rotationDamping: 3
+  sensitivity: {x: 0.01, y: 0.01}
+  verticalPitch: 85
 --- !u!114 &1129490429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +253,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1129490425}
   cursorRadius: 1
+  gameCursor: {fileID: 289222118}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  throwObjectPrefab: {fileID: 289222118}
+  throwSpeed: 10
+  throwArcHeight: 2
+  throwStrengthMultiplier: 1
+  texture: {fileID: 0}
 --- !u!114 &1129490430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,27 +274,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7420e43507b38154bb2441a5dd643475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
-  jumpHeight: 1
-  gravity: -9.8
---- !u!143 &1129490431
-CharacterController:
+  moveSpeed: 5
+  rotationSpeed: 720
+  jumpForce: 5
+--- !u!54 &1129490431
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129490424}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 2
 --- !u!1 &1805933960
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +483,7 @@ GameObject:
   - component: {fileID: 1949520186}
   - component: {fileID: 1949520185}
   - component: {fileID: 1949520184}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -626,6 +635,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 826425541492344698, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 1129490425}
     - target: {fileID: 826425541492344699, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
       propertyPath: playerTransform
       value: 

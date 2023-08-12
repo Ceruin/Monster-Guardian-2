@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 720.0f;
     public float jumpForce = 5f;
-    private RigidBody body;
+    private Rigidbody body;
     private Vector2 _moveInput;
     private float verticalVelocity = 0.0f;
     private bool jumpRequest = false;
@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        body = GetComponent<RigidBody>();
+        body = GetComponent<Rigidbody>();
         actions = new PlayerControls();
 
         actions.Player.Movement.performed += OnMove_performed;
@@ -97,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
             Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
-        controller.Move(finalMovement);
+        //controller.Move(finalMovement);
     }
 
     private void HandleRotation(Vector3 moveDir)
