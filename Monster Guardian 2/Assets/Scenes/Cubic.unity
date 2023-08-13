@@ -227,12 +227,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129490424}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b2b0509a66a9384699eac444e9cbf20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1805933963}
+  target: {fileID: 1129490425}
   distance: 10
   height: 5
   heightDamping: 2
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129490424}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2820d2c66ddfba94b9a913bc4dcbb144, type: 3}
   m_Name: 
@@ -636,6 +636,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 826425541492344698, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 476705664}
+    - target: {fileID: 826425541492344698, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 1129490425}
@@ -783,6 +787,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce1d0d46cfdd7fe44852a2afac84c0ef, type: 3}
+--- !u!1 &6350073586709904838 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2977825456451286611, guid: ce1d0d46cfdd7fe44852a2afac84c0ef, type: 3}
+  m_PrefabInstance: {fileID: 6350073586709904837}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6350073586709904839
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6350073586709904838}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Center: {x: -0.050000004, y: 0.25, z: -0.050000004}
 --- !u!1 &8164078559298084632
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,6 +816,7 @@ GameObject:
   - component: {fileID: 1151388028015889443}
   - component: {fileID: 2823090748006888809}
   - component: {fileID: 1587545475517993469}
+  - component: {fileID: 8164078559298084633}
   m_Layer: 0
   m_Name: body
   m_TagString: Untagged
@@ -801,6 +824,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &8164078559298084633
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8164078559298084632}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1 &8164078559539587651 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8805856234683384017, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
