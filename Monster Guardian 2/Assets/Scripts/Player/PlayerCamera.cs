@@ -24,7 +24,7 @@ public class PlayerCamera : MonoBehaviour
         actions.Player.CameraRotate.canceled += CameraRotate_canceled;
         actions.Enable();
 
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
 
         originalOffset = transform.position - target.position;
 

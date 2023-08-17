@@ -58,7 +58,7 @@ public class PlayerCursor : MonoBehaviour
             float throwStrength = Vector3.Distance(gameCursor.transform.position, player.transform.position) * throwStrengthMultiplier;
 
             // Call the throw function
-            ThrowObject(gameCursor.transform.position, throwStrength);
+            ThrowObject(gameCursor.transform.position, throwStrength);  
         }
     }
 
