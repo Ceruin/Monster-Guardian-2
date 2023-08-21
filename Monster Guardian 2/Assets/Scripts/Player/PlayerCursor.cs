@@ -53,12 +53,18 @@ public class PlayerCursor : MonoBehaviour
         // check if the left mouse button was clicked
         if (actions.Player.Throw.triggered)
         {
+            // Ignore collisions with player object
+            Physics.IgnoreCollision(gameCursor.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
+
             // calculate the throw direction and strength based on the cursor position and player position
             Vector3 throwDirection = (gameCursor.transform.position - player.transform.position).normalized;
             float throwStrength = Vector3.Distance(gameCursor.transform.position, player.transform.position) * throwStrengthMultiplier;
 
             // Call the throw function
-            ThrowObject(gameCursor.transform.position, throwStrength);  
+            ThrowObject(gameCursor.transform.position, throwStrength);
+
+            // Enable collisions with player object after the throw
+            Physics.IgnoreCollision(gameCursor.GetComponent<Collider>(), player.GetComponent<Collider>(), false);
         }
     }
 
