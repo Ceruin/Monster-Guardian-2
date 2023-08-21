@@ -71,44 +71,43 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 movement = (cameraForward * _moveInput.y + cameraRight * _moveInput.x) * moveSpeed * Time.deltaTime;
 
+        HandleJump();
+
         // Combine the horizontal and vertical movement
         Vector3 finalMovement = movement + new Vector3(0, verticalVelocity, 0) * Time.deltaTime;
 
+        HandleRotation(movement);
+        
+        body.velocity = finalMovement;
+    }
+
+    private void HandleRotation(Vector3 movement)
+    {
         // If there's some horizontal movement, rotate the character to face the move direction
         if (movement != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
-        body.velocity = finalMovement;
-    }
-
-    private void HandleRotation(Vector3 moveDir)
-    {
-        if (moveDir != Vector3.zero) // only change rotation when moving
-        {
-            Quaternion toRotation = Quaternion.LookRotation(moveDir, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.fixedDeltaTime);
-        }
     }
 
     private void HandleJump()
     {
-        //        // Apply gravity
-        //        if (controller.isGrounded)
-        //        {
-        //            verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
+                // Apply gravity
+                if (true) // if grounded
+                {
+                    verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
 
-        //            // If a jump has been requested, apply an upward force
-        //            if (jumpRequest)
-        //            {
-        //                verticalVelocity = jumpForce;
-        //                jumpRequest = false;  // Reset the jump request
-        //            }
-        //        }
-        //        else
-        //        {
-        //            verticalVelocity += Physics.gravity.y * Time.deltaTime;  // Apply gravity
-        //        }
+                    // If a jump has been requested, apply an upward force
+                    if (jumpRequest)
+                    {
+                        verticalVelocity = jumpForce;
+                        jumpRequest = false;  // Reset the jump request
+                    }
+                }
+                else
+                {
+                    verticalVelocity += Physics.gravity.y * Time.deltaTime;  // Apply gravity
+                }
     }
 }
