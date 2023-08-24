@@ -54,7 +54,7 @@ public class PlayerCursor : MonoBehaviour
         if (actions.Player.Throw.triggered)
         {
             // Ignore collisions with player object
-            Physics.IgnoreCollision(gameCursor.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
+            Physics.IgnoreCollision(throwObjectPrefab.GetComponentInChildren<Collider>(), player.GetComponentInChildren<Collider>(), true);
 
             // calculate the throw direction and strength based on the cursor position and player position
             Vector3 throwDirection = (gameCursor.transform.position - player.transform.position).normalized;
@@ -64,7 +64,7 @@ public class PlayerCursor : MonoBehaviour
             ThrowObject(gameCursor.transform.position, throwStrength);
 
             // Enable collisions with player object after the throw
-            Physics.IgnoreCollision(gameCursor.GetComponent<Collider>(), player.GetComponent<Collider>(), false);
+            Physics.IgnoreCollision(throwObjectPrefab.GetComponentInChildren<Collider>(), player.GetComponentInChildren<Collider>(), false);
         }
     }
 

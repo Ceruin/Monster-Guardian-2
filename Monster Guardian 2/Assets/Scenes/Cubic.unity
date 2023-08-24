@@ -193,7 +193,7 @@ MonoBehaviour:
   throwObjectPrefab: {fileID: 289222118}
   throwSpeed: 10
   throwArcHeight: 2
-  throwStrengthMultiplier: 1
+  throwStrengthMultiplier: 52.58
   texture: {fileID: 0}
 --- !u!1 &1129490424
 GameObject:
