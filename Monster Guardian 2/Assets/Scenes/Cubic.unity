@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7420e43507b38154bb2441a5dd643475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 450
+  moveSpeed: 3
   rotationSpeed: 720
   jumpForce: 5
 --- !u!54 &1129490431
@@ -313,7 +313,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129490424}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -725,12 +725,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 476705664}
     - target: {fileID: 826425541492344698, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 826425541492344698, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 1129490425}
     - target: {fileID: 826425541492344699, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 826425541492344699, guid: e735a38ec6ed7c24c9e41542cc87bf42, type: 3}
       propertyPath: playerTransform

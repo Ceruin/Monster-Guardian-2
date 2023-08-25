@@ -69,14 +69,14 @@ public class PlayerMovement : MonoBehaviour
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        Vector3 movement = (cameraForward * _moveInput.y + cameraRight * _moveInput.x) * moveSpeed * Time.deltaTime;
+        Vector3 movement = (cameraForward * _moveInput.y + cameraRight * _moveInput.x) * moveSpeed;
 
         HandleJump();
 
         // Combine the horizontal and vertical movement
         Vector3 finalMovement = movement + new Vector3(0, verticalVelocity, 0) * Time.deltaTime;
 
-        HandleRotation(movement);
+        HandleRotation(finalMovement);
         
         body.velocity = finalMovement;
     }
@@ -93,21 +93,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJump()
     {
-                // Apply gravity
-                if (true) // if grounded
-                {
-                    verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
+        // Apply gravity
+        if (true) // if grounded
+        {
+            verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
 
-                    // If a jump has been requested, apply an upward force
-                    if (jumpRequest)
-                    {
-                        verticalVelocity = jumpForce;
-                        jumpRequest = false;  // Reset the jump request
-                    }
-                }
-                else
-                {
-                    verticalVelocity += Physics.gravity.y * Time.deltaTime;  // Apply gravity
-                }
+            // If a jump has been requested, apply an upward force
+            if (jumpRequest)
+            {
+                verticalVelocity = jumpForce;
+                jumpRequest = false;  // Reset the jump request
+            }
+        }
+        else
+        {
+            verticalVelocity += Physics.gravity.y * Time.deltaTime;  // Apply gravity
+        }
     }
 }
