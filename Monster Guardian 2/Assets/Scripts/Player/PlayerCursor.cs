@@ -78,6 +78,7 @@ public class PlayerCursor : MonoBehaviour
         actions.Enable();
     }
 
+    // Modify the ThrowObject method to throw the object without colliding until it hits a viable surface
     private void ThrowObject(Vector3 targetPosition, float speed)
     {
         // Create a new instance of the object at the player's position
@@ -99,12 +100,32 @@ public class PlayerCursor : MonoBehaviour
             rb.velocity = throwVelocity;
         }
 
-        // Disable the collider on the thrown object for a short time
-        Collider objectCollider = thrownObject.GetComponent<Collider>();
-        if (objectCollider != null)
+        // Check if the thrown object collides with something
+        RaycastHit hit;
+        if (Physics.Raycast(player.transform.position, throwDirection, out hit, throwVelocity.magnitude))
         {
-            objectCollider.enabled = false;
-            StartCoroutine(EnableColliderAfterDelay(objectCollider, 0.5f));
+            // If the object collides with an object, get the normal of the surface and reflect the velocity
+            Vector3 normal = hit.normal;
+
+            // Reflect the velocity using normal vector and get the new direction
+            Vector3 reflectedDirection = Vector3.Reflect(throwVelocity.normalized, normal);
+
+            // Normalize the reflected direction and multiply by the speed to get the new velocity
+            Vector3 reflectedVelocity = reflectedDirection.normalized * speed;
+
+            // Set the new velocity of the object
+            if (rb != null)
+            {
+                rb.velocity = reflectedVelocity;
+            }
+
+            // Enable collider after a short delay
+            Collider objectCollider = thrownObject.GetComponent<Collider>();
+            if (objectCollider != null)
+            {
+                objectCollider.enabled = false;
+                StartCoroutine(EnableColliderAfterDelay(objectCollider, 0.5f));
+            }
         }
     }
 
@@ -122,20 +143,36 @@ public class PlayerCursor : MonoBehaviour
     private IEnumerator AnimateWhistleEffect()
     {
         float initialRadius = cursorRadius;
-        float targetRadius = 5f;
-        float duration = 0.5f;
+        float targetRadius = 10f; // max radius to be reached
+        float duration = 3f; // total duration for the whistle to reach max radius
         float timeElapsed = 0;
 
         while (timeElapsed < duration)
         {
-            cursorRadius = Mathf.Lerp(initialRadius, targetRadius, timeElapsed / duration);
+            float t = timeElapsed / duration;
+            cursorRadius = Mathf.Lerp(initialRadius, targetRadius, t);
+
+            // particle system for circle effect
+            ParticleSystem particleCircle = this.gameObject.GetComponent<ParticleSystem>();
+            if (particleCircle)
+            {
+                // update circle radius
+                ParticleSystem.ShapeModule shape = particleCircle.shape;
+                shape.radius = cursorRadius;
+                // play the particles
+                particleCircle.Play();
+            }
+
             timeElapsed += Time.deltaTime;
             yield return null;
         }
 
+        // reset radius to initial value
         cursorRadius = initialRadius;
     }
 }
+
+
 //using System.Collections;
 //using UnityEngine;
 

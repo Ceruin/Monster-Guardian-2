@@ -3,14 +3,18 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region Fields
+    private Vector2 _moveInput;
+    private PlayerControls actions;
+    private Rigidbody body;
+    private bool jumpRequest = false;
+    private float verticalVelocity = 0.0f;
+    public float jumpForce = 5f;
     public float moveSpeed = 500f;
     public float rotationSpeed = 720.0f;
-    public float jumpForce = 5f;
-    private Rigidbody body;
-    private Vector2 _moveInput;
-    private float verticalVelocity = 0.0f;
-    private bool jumpRequest = false;
-    private PlayerControls actions;
+    #endregion Fields
+
+    #region Methods
 
     private void Awake()
     {
@@ -23,37 +27,24 @@ public class PlayerMovement : MonoBehaviour
         actions.Player.Jump.performed += OnJump_performed;
     }
 
-    private void OnEnable()
+    private void HandleJump()
     {
-        // Enable the input actions when the object is enabled
-        actions.Player.Enable();
-    }
+        // Apply gravity
+        if (IsGrounded()) // if grounded
+        {
+            verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
 
-    private void OnDisable()
-    {
-        // Disable the input actions when the object is disabled
-        actions.Player.Disable();
-    }
-
-    public void OnMove_performed(InputAction.CallbackContext context)
-    {
-        _moveInput = context.ReadValue<Vector2>();
-    }
-
-    public void OnMove_canceled(InputAction.CallbackContext context)
-    {
-        _moveInput = Vector2.zero;
-    }
-
-    public void OnJump_performed(InputAction.CallbackContext context)
-    {
-        // Set a flag to indicate that a jump has been requested
-        jumpRequest = true;
-    }
-
-    private void Update()
-    {
-        HandleMovement();
+            // If a jump has been requested, apply an upward force
+            if (jumpRequest)
+            {
+                verticalVelocity += jumpForce;
+                jumpRequest = false;  // Reset the jump request
+            }
+        }
+        else
+        {
+            verticalVelocity += Physics.gravity.y * Time.deltaTime;  // Apply gravity
+        }
     }
 
     private void HandleMovement()
@@ -77,37 +68,56 @@ public class PlayerMovement : MonoBehaviour
         Vector3 finalMovement = movement + new Vector3(0, verticalVelocity, 0) * Time.deltaTime;
 
         HandleRotation(finalMovement);
-        
+
         body.velocity = finalMovement;
     }
 
     private void HandleRotation(Vector3 movement)
     {
-        // If there's some horizontal movement, rotate the character to face the move direction
         if (movement != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            float step = rotationSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, step * Mathf.Min(1, movement.magnitude));
         }
     }
 
-    private void HandleJump()
+    private void OnDisable()
     {
-        // Apply gravity
-        if (true) // if grounded
-        {
-            verticalVelocity = 0;  // Reset the vertical velocity if the character is grounded
-
-            // If a jump has been requested, apply an upward force
-            if (jumpRequest)
-            {
-                verticalVelocity = jumpForce;
-                jumpRequest = false;  // Reset the jump request
-            }
-        }
-        else
-        {
-            verticalVelocity += Physics.gravity.y * Time.deltaTime;  // Apply gravity
-        }
+        // Disable the input actions when the object is disabled
+        actions.Player.Disable();
     }
+
+    private void OnEnable()
+    {
+        // Enable the input actions when the object is enabled
+        actions.Player.Enable();
+    }
+
+    private void Update()
+    {
+        HandleMovement();
+    }
+
+    public void OnJump_performed(InputAction.CallbackContext context)
+    {
+        // Set a flag to indicate that a jump has been requested
+        jumpRequest = true;
+    }
+
+    public void OnMove_canceled(InputAction.CallbackContext context)
+    {
+        _moveInput = Vector2.zero;
+    }
+
+    public void OnMove_performed(InputAction.CallbackContext context)
+    {
+        _moveInput = context.ReadValue<Vector2>();
+    }
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, -Vector3.up, GetComponent<Collider>().bounds.extents.y + 0.1f);
+    }
+
+    #endregion Methods
 }

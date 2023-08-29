@@ -18,6 +18,10 @@ public class CubeminMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
+    public float followDistance = 3f; //set distance between player and object to follow
+    public float avoidDistance = 2f; //minimum distance to avoid collision
+    public float avoidanceForce = 5f; //force to apply when avoiding obstacle
+
     void FixedUpdate()
     {
         if (isFollowingPlayer)
@@ -29,7 +33,16 @@ public class CubeminMovement : MonoBehaviour
     public void FollowPlayer()
     {
         Vector3 direction = (playerTransform.position - transform.position).normalized;
-        rb.MovePosition(transform.position + direction * followSpeed * Time.fixedDeltaTime);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, direction, out hit, avoidDistance))
+        {
+            Vector3 avoidanceDirection = (transform.position - hit.point).normalized;
+            rb.AddForce(avoidanceDirection * avoidanceForce, ForceMode.Acceleration);
+        }
+        else if (Vector3.Distance(transform.position, playerTransform.position) > followDistance)
+        {
+            rb.MovePosition(transform.position + direction * followSpeed * Time.fixedDeltaTime);
+        }
     }
 
     private void MoveTowardsTarget()

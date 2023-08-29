@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class PlayerCamera : MonoBehaviour
 {
     public Transform target; // Target to follow (usually the player)
@@ -10,12 +11,10 @@ public class PlayerCamera : MonoBehaviour
     public float rotationDamping = 3.0f;
     public Vector2 sensitivity = new Vector2(0.01f, 0.01f);
     public int verticalPitch = 85;
-
     private PlayerControls actions;
     private Vector3 originalOffset;
     private Vector2 _cameraInput;
     private float yaw = 0.0f;
-    private float pitch = 0.0f;
 
     private void Awake()
     {
@@ -26,55 +25,32 @@ public class PlayerCamera : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Confined;
 
-        originalOffset = transform.position - target.position;
+        originalOffset = new Vector3(0f, height, -distance);
 
-        distance = originalOffset.magnitude;
         yaw = Mathf.Atan2(originalOffset.x, originalOffset.z);
-        pitch = Mathf.Asin(originalOffset.y / distance);
     }
 
     void LateUpdate()
     {
         Rotate();
         Zoom();
-        Track();
         Follow();
     }
 
     private void Rotate()
     {
         yaw += _cameraInput.x * sensitivity.x;
-        float targetPitch = pitch - _cameraInput.y * sensitivity.y;
-
-        if (targetPitch * Mathf.Rad2Deg > -verticalPitch && targetPitch * Mathf.Rad2Deg < verticalPitch)
-        {
-            pitch = targetPitch;
-        }
-
-        Quaternion currentRotation = Quaternion.Euler(0, yaw * Mathf.Rad2Deg, 0);
-        transform.position -= currentRotation * Vector3.forward * distance;
+        Quaternion currentRotation = Quaternion.Euler(45f, yaw * Mathf.Rad2Deg, 0);
+        transform.position = target.position + currentRotation * originalOffset;
     }
 
     private void Zoom()
     {
-        // Implement zoom functionality if needed
-    }
-
-    private void Track()
-    {
-        float wantedHeight = target.position.y + height;
-        float currentHeight = Mathf.Lerp(transform.position.y, wantedHeight, heightDamping * Time.deltaTime);
-
-        transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
+        //Implement zoom functionality if needed
     }
 
     private void Follow()
     {
-        Vector3 direction = new Vector3(Mathf.Sin(pitch) * Mathf.Sin(yaw),
-                                        Mathf.Cos(pitch),
-                                        Mathf.Sin(pitch) * Mathf.Cos(yaw));
-
-        transform.position = target.position + direction * distance;
         transform.LookAt(target);
     }
 
